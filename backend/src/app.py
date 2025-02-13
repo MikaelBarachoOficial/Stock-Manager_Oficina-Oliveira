@@ -67,7 +67,7 @@ def delete_item(code):
     query = 'DELETE FROM items WHERE code = ?'
     execute_query(query, (code,))
     # Add a history entry for deleting the item
-    add_history_entry(item['id'], item['quantity'], item['cost_value'], item['sell_value'], 'delete_item')
+    add_history_entry(item['id'], code, item['quantity'], item['cost_value'], item['sell_value'], 'delete_item')
     # Return a JSON response indicating success
     return jsonify({"message": "Item deleted successfully!"}), 200
 
@@ -134,6 +134,15 @@ def get_item(item_code):
     # If the item is not found, return a JSON response indicating the item was not found
     else:
         return jsonify({"message": "Item not found"}), 404
+    
+@app.route('/history/clear', methods=['DELETE'])
+def clear_history():
+    # SQL query to delete all entries from the history table
+    query = 'DELETE FROM history'
+    # Execute the query to clear the history
+    execute_query(query)
+    # Return a JSON response indicating success
+    return jsonify({"message": "History cleared successfully!"}), 200
 
 if __name__ == "__main__":
     # Start the Flask development server with debugging enabled

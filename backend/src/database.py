@@ -1,5 +1,6 @@
 import sqlite3
 import bcrypt
+from datetime import datetime
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -89,11 +90,13 @@ def init_history():
     close_db_connection(conn) #CAREFULL WITH LAST LINE REFERENCING ITEMS
 
 def add_history_entry(item_id, item_code, quantity, cost_value, sell_value, action_type):
+    # Get the current timestamp
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     query = '''
         INSERT INTO history (item_id, item_code, quantity, cost_value, sell_value, action_type, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     '''
-    execute_query(query, (item_id, item_code, quantity, cost_value, sell_value, action_type))
+    execute_query(query, (item_id, item_code, quantity, cost_value, sell_value, action_type, timestamp))
 
 def init_db():
     init_login()
