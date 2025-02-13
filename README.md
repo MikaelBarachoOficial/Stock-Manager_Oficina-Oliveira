@@ -1,4 +1,4 @@
-# Oficina Oliveira Stock Manager
+# Oficina Oliveira - Stock Manager
 
 Welcome to the Stock Manager for Oficina Oliveira, a reputable company with over 20 years of experience in the industry. This project is designed to help manage your inventory efficiently, keeping track of stock levels and maintaining a history of all stock movements.
 

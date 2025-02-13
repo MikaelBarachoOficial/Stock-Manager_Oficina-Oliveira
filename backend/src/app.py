@@ -1,6 +1,6 @@
 import bcrypt
 from flask import Flask, request, jsonify
-from database import init_db, execute_query, fetch_all, fetch_one
+from database import init_db, execute_query, fetch_all, fetch_one, add_history_entry
 
 app = Flask(__name__)
 
@@ -23,8 +23,57 @@ def login():
         # Return a JSON response indicating failure
         return jsonify({"message": "Login failed"}), 401
 
-@app.route('/items', methods=['POST'])
+@app.route('/items/add_item', methods=['POST'])
 def add_item():
+    # Get the JSON data sent in the request body
+    data = request.get_json()
+    code = data.get('code')
+    name = data.get('name')
+    quantity = data.get('quantity')
+    cost_value = data.get('cost_value')
+    sell_value = data.get('sell_value')
+
+    if not code or not name or not quantity or not cost_value or not sell_value:
+        return jsonify({"message": "All inputs must be sent."}), 400
+
+    # Check if an item with the same code or name already exists
+    query = 'SELECT * FROM items WHERE code = ? OR name = ?'
+    existing_item = fetch_one(query, (code, name))
+
+    if existing_item:
+        return jsonify({"message": "An item with the same code or name already exists."}), 400
+
+    # SQL query to insert a new item into the items table
+    query = 'INSERT INTO items (code, name, quantity, cost_value, sell_value) VALUES (?, ?, ?, ?, ?)'
+    # Execute the query with the provided item data
+    item_id = execute_query(query, (code, name, quantity, cost_value, sell_value))
+
+    # Add a history entry for creating the item
+    add_history_entry(item_id, code, quantity, cost_value, sell_value, 'create_item')
+
+    # Return a JSON response with the ID of the newly created item
+    return jsonify({"message": "Item created successfully!", "item_id": item_id}), 201
+
+@app.route('/items/delete_item/<string:code>', methods=['DELETE'])
+def delete_item(code):
+    # Fetch the item by code
+    query = 'SELECT * FROM items WHERE code = ?'
+    item = fetch_one(query, (code,))
+    
+    if not item:
+        return jsonify({"message": "Item not found"}), 404
+
+    # SQL query to delete the item from the items table
+    query = 'DELETE FROM items WHERE code = ?'
+    execute_query(query, (code,))
+    # Add a history entry for deleting the item
+    add_history_entry(item['id'], item['quantity'], item['cost_value'], item['sell_value'], 'delete_item')
+    # Return a JSON response indicating success
+    return jsonify({"message": "Item deleted successfully!"}), 200
+
+
+@app.route('/items/add_and_sell', methods=['PUT'])
+def add_and_sell_stock():
     # Get the JSON data sent in the request body
     data = request.get_json()
     action = data.get('action')
@@ -47,7 +96,7 @@ def add_item():
         query = 'UPDATE items SET quantity = ? WHERE code = ?'
         execute_query(query, (new_quantity, code))
         # Add a history entry for adding stock
-        add_history_entry(item['id'], quantity, item['cost_value'], item['sell_value'], 'add_stock')
+        add_history_entry(item['id'], code, quantity, item['cost_value'], item['sell_value'], 'add_stock')
         return jsonify({"message": "Stock added successfully!", "new_quantity": new_quantity}), 200
 
     elif action == 'sell':
@@ -58,7 +107,7 @@ def add_item():
         query = 'UPDATE items SET quantity = ? WHERE code = ?'
         execute_query(query, (new_quantity, code))
         # Add a history entry for selling stock
-        add_history_entry(item['id'], quantity, item['cost_value'], item['sell_value'], 'sell')
+        add_history_entry(item['id'], code, quantity, item['cost_value'], item['sell_value'], 'sell')
         return jsonify({"message": "Item sold successfully!", "new_quantity": new_quantity}), 200
 
     else:
@@ -73,12 +122,12 @@ def get_items():
     # Return a JSON response with the list of items
     return jsonify([dict(item) for item in items]), 200
 
-@app.route('/items/<int:item_id>', methods=['GET'])
-def get_item(item_id):
+@app.route('/items/<string:code>', methods=['GET'])
+def get_item(item_code):
     # SQL query to select an item by its ID
-    query = 'SELECT * FROM items WHERE id = ?'
+    query = 'SELECT * FROM items WHERE code = ?'
     # Execute the query with the provided item ID
-    item = fetch_one(query, (item_id,))
+    item = fetch_one(query, (item_code,))
     # If the item is found, return its data as a JSON response
     if item:
         return jsonify(dict(item)), 200

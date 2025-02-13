@@ -77,14 +77,23 @@ def init_history():
             CREATE TABLE IF NOT EXISTS history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 item_id INTEGER NOT NULL,
+                item_code TEXT NOT NULL,
                 quantity INTEGER NOT NULL,
                 cost_value REAL NOT NULL,
                 sell_value REAL NOT NULL,
                 action_type TEXT NOT NULL,
-                timestamp TEXT NOT NULL
+                timestamp TEXT NOT NULL,
+                FOREIGN KEY (item_id) REFERENCES items(id) 
             )
         ''')
-    close_db_connection(conn)
+    close_db_connection(conn) #CAREFULL WITH LAST LINE REFERENCING ITEMS
+
+def add_history_entry(item_id, item_code, quantity, cost_value, sell_value, action_type):
+    query = '''
+        INSERT INTO history (item_id, item_code, quantity, cost_value, sell_value, action_type, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?, datetime('now'))
+    '''
+    execute_query(query, (item_id, item_code, quantity, cost_value, sell_value, action_type))
 
 def init_db():
     init_login()
