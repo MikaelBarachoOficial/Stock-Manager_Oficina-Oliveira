@@ -17,10 +17,12 @@ The Stock Manager is a web-based application developed using Flask and SQLite. I
 
 - **/login**: Authenticate users.
 - **/items**: 
-    - `POST`: Add stock or sell items.
-    - `GET`: Retrieve a list of all items.
-- **/items/<item_id>**: 
-    - `GET`: Retrieve details of a specific item by its ID.
+        - `POST /items/add_item`: Add a new item to the inventory.
+        - `DELETE /items/delete_item/<string:code>`: Delete an item from the inventory by its code.
+        - `PUT /items/add_and_sell`: Add stock or sell items.
+        - `GET /items`: Retrieve a list of all items.
+        - `GET /items/<string:code>`: Retrieve details of a specific item by its code.
+- **/history/clear**: Clear the history of all stock movements.
 
 ### Developed By Mikael Baracho
 
@@ -57,3 +59,6 @@ This project is licensed under the MIT License.
 For any questions or support, please contact Mikael Baracho.
 
 Thank you for choosing Oficina Oliveira Stock Manager!
+
+
+
