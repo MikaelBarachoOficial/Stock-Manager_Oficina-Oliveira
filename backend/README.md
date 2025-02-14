@@ -1,52 +1,79 @@
-# My Python Server
+# Oficina Oliveira Server Backend
 
-This project is a simple server built with Flask that manages a SQLite database. It provides a structured way to handle data and serve it through a RESTful API.
+This backend is built using Flask and SQLite to manage a simple inventory system. It includes functionalities for user authentication, item management, and history tracking.
 
-## Project Structure
+## Setup
 
-```
-my-python-server
-├── src
-│   ├── app.py          # Entry point of the application
-│   ├── database.py     # Database connection and management
-│   ├── models          # Contains data models
-│   │   └── __init__.py
-│   ├── routes          # API routes
-│   │   └── __init__.py
-│   └── utils           # Utility functions
-│       └── __init__.py
-├── requirements.txt    # Project dependencies
-└── README.md           # Project documentation
-```
-
-## Setup Instructions
-
-1. Clone the repository:
-   ```
-   git clone <repository-url>
-   cd my-python-server
+1. **Clone the repository:**
+   ```sh
+   git clone <repository_url>
+   cd backend
    ```
 
-2. Create a virtual environment:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-
-3. Install the required dependencies:
-   ```
+2. **Install dependencies:**
+   ```sh
    pip install -r requirements.txt
    ```
 
-4. Run the application:
-   ```
+3. **Run the application:**
+   ```sh
    python src/app.py
    ```
 
-## Usage
+## Database
 
-Once the server is running, you can interact with the API endpoints defined in the `src/routes/__init__.py` file. Use tools like Postman or curl to send requests to the server.
+The database is managed using SQLite. The following tables are created and used:
 
-## Contributing
+- **login:** Stores the hashed password for authentication.
+- **items:** Stores the inventory items.
+- **history:** Tracks changes made to the items.
 
-Feel free to submit issues or pull requests if you have suggestions or improvements for the project.
+### Initialization
+
+The database is initialized with the following functions:
+
+- `init_login()`: Creates the `login` table and inserts a default password if none exists.
+- `init_items()`: Creates the `items` table.
+- `init_history()`: Creates the `history` table.
+
+### Utility Functions
+
+- `get_db_connection()`: Establishes a connection to the SQLite database.
+- `close_db_connection(conn)`: Closes the database connection.
+- `execute_query(query, params)`: Executes a given SQL query with parameters.
+- `fetch_all(query, params)`: Fetches all rows for a given SQL query.
+
+## Endpoints and Routes
+
+### User Authentication
+
+- **POST /login**
+  - Authenticates a user with a username and password.
+  - Request body: `{ "username": "user", "password": "pass" }`
+  - Response: `{ "message": "Login successful" }` or `{ "error": "Invalid credentials" }`
+
+### Item Management
+
+- **GET /items**
+  - Retrieves all items in the inventory.
+  - Response: `[ { "id": 1, "name": "item1", "quantity": 10 }, ... ]`
+
+- **POST /items**
+  - Adds a new item to the inventory.
+  - Request body: `{ "name": "item1", "quantity": 10 }`
+  - Response: `{ "message": "Item added successfully" }`
+
+- **PUT /items/<id>**
+  - Updates an existing item in the inventory.
+  - Request body: `{ "name": "item1", "quantity": 15 }`
+  - Response: `{ "message": "Item updated successfully" }`
+
+- **DELETE /items/<id>**
+  - Deletes an item from the inventory.
+  - Response: `{ "message": "Item deleted successfully" }`
+
+### History Tracking
+
+- **GET /history**
+  - Retrieves the history of changes made to the items.
+  - Response: `[ { "id": 1, "item_id": 1, "change": "added", "timestamp": "2023-01-01T00:00:00Z" }, ... ]`

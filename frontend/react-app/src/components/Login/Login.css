@@ -1,0 +1,53 @@
+/* Login.css */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.password-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+
+  margin: 20px 0;
+}
+
+.wrong-password {
+  color: rgb(189, 0, 0);
+  font-size: 1em;
+}
+
+.login-container input[type="password"] {
+  text-align: center;
+}
+
+.keepLoggedInField {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.keepLoggedInField input {
+  cursor: pointer;
+}
+
+.keepLoggedInField label {
+  cursor: pointer;
+}
+
+@media (max-width: 430px) {
+  .login-container h1 {
+    font-size: 10vw;
+  }
+}
