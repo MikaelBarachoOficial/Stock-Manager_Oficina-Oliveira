@@ -1,0 +1,36 @@
+/* ServerLess.css */
+.serverless-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 20px;
+    color: #EFE9D5; ;
+  }
+  
+  .serverless-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .serverless-container p {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .serverless-container button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background-color: #721c24;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .serverless-container button:hover {
+    background-color: #a94442;
+  }
+  

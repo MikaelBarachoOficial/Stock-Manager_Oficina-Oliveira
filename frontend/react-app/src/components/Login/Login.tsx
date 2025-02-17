@@ -14,19 +14,34 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     const COOKIE_NAME = 'keepLoggedIn';
     const COOKIE_PATH = 'path=/';
 
-    const handleLogin = () => {
-        if (password === 'i') {
-            onLogin(); // Call function to update App.tsx state
+    const handleLogin = async () => {
 
-            if (keepLoggedIn) {
-                // Set a cookie for 24 hours
-                const date = new Date();
-                date.setDate(date.getDate() + 1);
-                document.cookie = `${COOKIE_NAME}=true; expires=${date.toUTCString()}; ${COOKIE_PATH}`;
+        try {
+            const response = await fetch("http://127.0.0.1:5000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password }),
+            });
+    
+            if (response.ok) {
+                onLogin(); // Call function to update App.tsx state
+    
+                if (keepLoggedIn) {
+                    const date = new Date();
+                    date.setDate(date.getDate() + 1);
+                    document.cookie = `${COOKIE_NAME}=true; expires=${date.toUTCString()}; path=/; Secure; SameSite=Strict`;
+                }
+            } else {
+                setWrongPassword(true);
             }
-        } else {
+        } catch (error) {
+            console.error("Login failed", error);
             setWrongPassword(true);
+            window.location.reload();
         }
+
     };
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +72,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     placeholder="Enter password"
                     onKeyDown={handleKeyDown}
                 />
-                <p className={`wrong-password ${wrongPassword ? 'visible' : 'hidden'}`}>Wrong Password</p>
+                <p className={`wrong-password ${wrongPassword ? '' : 'hidden'}`}>Wrong Password</p>
             </div>
             <div className="keepLoggedInField">
                 <input

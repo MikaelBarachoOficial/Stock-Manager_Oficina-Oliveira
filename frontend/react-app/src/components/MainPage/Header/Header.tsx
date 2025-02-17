@@ -3,10 +3,11 @@ import './Header.css';
 
 interface HeaderProps {
   onLogout: () => void;
-  onTabChange: (tab: 'stock' | 'items' | 'history') => void;
+  onTabChange: (tab: 'stock' | 'options' | 'history') => void;
+  checkServerStatus: () => Promise<void>;
 }
 
-const Header: React.FC<HeaderProps> = ({ onLogout, onTabChange }) => {
+const Header: React.FC<HeaderProps> = ({ onLogout, onTabChange, checkServerStatus }) => {
   return (
     <>
       <header className="header">
@@ -17,16 +18,16 @@ const Header: React.FC<HeaderProps> = ({ onLogout, onTabChange }) => {
         <nav>
           <ul>
             <li>
-              <button onClick={() => onTabChange('stock')}>Estoque</button>
+              <button onClick={async () => { await checkServerStatus(); onTabChange('stock')}}>Estoque</button>
             </li>
             <li>
-              <button onClick={() => onTabChange('items')}>Itens</button>
+              <button onClick={async () => { await checkServerStatus(); onTabChange('options')}}>Opções</button>
             </li>
             <li>
-              <button onClick={() => onTabChange('history')}>Histórico</button>
+              <button onClick={async () => { await checkServerStatus(); onTabChange('history')}}>Histórico</button>
             </li>
             <li>
-              <button onClick={onLogout}>Sair</button>
+              <button onClick={async () => { await checkServerStatus(); onLogout()}}>Sair</button>
             </li>
           </ul>
         </nav>

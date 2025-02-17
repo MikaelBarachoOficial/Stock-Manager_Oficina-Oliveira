@@ -3,19 +3,20 @@ import React, { useState } from 'react';
 import './MainPage.css';
 import Header from './Header/Header';
 import Stock from './Stock/Stock';
-import Items from './Items/Items'; 
+import Options from './Options/Options'; 
 import History from './History/History'; 
 
 interface MainPageProps {
   onLogout: () => void;
+  checkServerStatus: () => Promise<void>;
 }
 
-const MainPage: React.FC<MainPageProps> = ({ onLogout }) => {
-    const [activeTab, setActiveTab] = useState<'stock' | 'items' | 'history'>('stock');
+const MainPage: React.FC<MainPageProps> = ({ onLogout, checkServerStatus }) => {
+    const [activeTab, setActiveTab] = useState<'stock' | 'options' | 'history'>('stock');
 
 
   // Callback to change the active tab
-  const handleTabChange = (tab: 'stock' | 'items' | 'history') => {
+  const handleTabChange = (tab: 'stock' | 'options' | 'history') => {
     setActiveTab(tab);
   };
 
@@ -23,12 +24,12 @@ const MainPage: React.FC<MainPageProps> = ({ onLogout }) => {
     <div className="main-container">
       <div className="content">
         {/* Pass the tab change callback to Header */}
-        <Header onLogout={onLogout} onTabChange={handleTabChange} />
+        <Header checkServerStatus={checkServerStatus} onLogout={onLogout} onTabChange={handleTabChange} />
 
         {/* Conditionally render components based on activeTab */}
-        {activeTab === 'stock' && <Stock onLogout={onLogout} />}
-        {activeTab === 'items' && <Items onLogout={onLogout} />}
-        {activeTab === 'history' && <History onLogout={onLogout} />}
+        {activeTab === 'stock' && <Stock checkServerStatus={checkServerStatus} onLogout={onLogout} />}
+        {activeTab === 'options' && <Options checkServerStatus={checkServerStatus} onLogout={onLogout} />}
+        {activeTab === 'history' && <History checkServerStatus={checkServerStatus} onLogout={onLogout} />}
       </div>
     </div>
   );

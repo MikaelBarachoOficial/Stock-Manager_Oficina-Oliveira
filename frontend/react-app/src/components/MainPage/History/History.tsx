@@ -4,6 +4,7 @@ import './History.css';
 
 interface HistoryProps {
   onLogout: () => void;
+  checkServerStatus: () => Promise<void>;
 }
 
 const History: React.FC<HistoryProps> = ({ onLogout }) => {

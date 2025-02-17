@@ -11,6 +11,7 @@
    border-radius: 15px;
    color: white;
     cursor: pointer;
+    transition: all 0.3s;
 }
 
 .sell-stock-btn {
@@ -75,7 +76,7 @@
 }
 
 @media screen and (max-width: 720px) {
-    .stock-content {
+    .stock-content table {
         display: none;
     }
 

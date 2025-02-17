@@ -1,8 +1,10 @@
 import bcrypt
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from database import init_db, execute_query, fetch_all, fetch_one, add_history_entry
 
 app = Flask(__name__)
+CORS(app)
 
 # Initialize the database
 init_db()
@@ -144,6 +146,11 @@ def clear_history():
     # Return a JSON response indicating success
     return jsonify({"message": "History cleared successfully!"}), 200
 
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({'message': 'Server is working!'}), 200
+
+
 if __name__ == "__main__":
     # Start the Flask development server with debugging enabled
-    app.run(debug=True)
+        app.run(host='127.0.0.1', port=5000, debug=True)
