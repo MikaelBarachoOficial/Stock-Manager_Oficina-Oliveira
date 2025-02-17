@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import './Stock.css';
 import StockTable from "./StockTable/StockTable";
 import Loading from "../../Loading/Loading";
@@ -23,32 +23,30 @@ const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // Function to fetch items from the API
-  const fetchItems = async (): Promise<void> => {
+  const fetchItems = useCallback(async (): Promise<void> => {
     try {
       setLoading(true);
       await checkServerStatus();
       const response = await fetch("http://127.0.0.1:5000/items");
       const data = await response.json();
-
+  
       if (response.ok) {
         setItems(data);
       } else {
         alert("Erro ao buscar itens: " + data.message);
       }
-
     } catch (error) {
       console.error("Erro ao buscar itens:", error);
       alert("Erro ao buscar itens. Veja o console para detalhes.");
-
     } finally {
       setLoading(false);
     }
-  };
+  }, [checkServerStatus]);
 
   // Fetch items on component mount
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [fetchItems]);
 
   // Function to handle selling an item ("Adicionar Venda")
   const onSellStock = async (): Promise<void> => {
