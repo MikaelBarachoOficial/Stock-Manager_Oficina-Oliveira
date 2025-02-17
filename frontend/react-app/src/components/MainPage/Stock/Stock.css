@@ -1,0 +1,97 @@
+.add-and-sell {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    margin-top: 2em;
+}
+
+.add-and-sell button {
+    font-size: 1.5em;
+    padding: 0.5em;
+   border-radius: 15px;
+   color: white;
+    cursor: pointer;
+}
+
+.sell-stock-btn {
+    background-color: rgb(46, 151, 46);
+}
+
+.sell-stock-btn:hover {
+    background-color: rgb(44, 179, 44);
+}
+
+.sell-stock-btn:active {
+    background-color: rgb(20, 97, 20);
+}
+
+.add-stock-btn {
+    background-color: rgb(17, 17, 194);
+}
+
+.add-stock-btn:hover {
+    background-color: rgb(17, 17, 255);
+}
+
+.add-stock-btn:active {
+    background-color: rgb(16, 16, 156);
+}
+
+.stock-content {
+    display: flex;
+    justify-content: center;
+    margin-top: 2em;
+    max-width: 100%;
+}
+
+.stock-table-header {
+    font-size: 1.5em;
+    
+}
+
+.stock-table-body tr {
+    width: 100%;
+}
+
+.stock-table-body tr td input {
+    font-size: 1.3em;
+    text-align: center;
+    width: 11em;
+}
+
+.stock-hidden p {
+    display: none;
+}
+
+
+
+@media screen and (max-width: 1154px) {
+    .stock-table-header {
+        font-size: 1em;
+    }
+    .stock-table-body tr td input {
+        font-size: 0.8em;
+    }
+}
+
+@media screen and (max-width: 720px) {
+    .stock-content {
+        display: none;
+    }
+
+    .stock-hidden p {
+        display: block;
+        color: white;
+        font-size: large;
+        margin-top: 7em;
+    }
+
+    .add-and-sell {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 2em;
+        margin-top: 2em;
+    }
+
+}
