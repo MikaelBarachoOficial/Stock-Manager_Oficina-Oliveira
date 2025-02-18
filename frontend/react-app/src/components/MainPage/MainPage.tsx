@@ -27,9 +27,9 @@ const MainPage: React.FC<MainPageProps> = ({ onLogout, checkServerStatus }) => {
         <Header checkServerStatus={checkServerStatus} onLogout={onLogout} onTabChange={handleTabChange} />
 
         {/* Conditionally render components based on activeTab */}
-        {activeTab === 'stock' && <Stock checkServerStatus={checkServerStatus} onLogout={onLogout} />}
+        {activeTab === 'stock' && <Stock checkServerStatus={checkServerStatus} />}
         {activeTab === 'options' && <Options checkServerStatus={checkServerStatus} onLogout={onLogout} />}
-        {activeTab === 'history' && <History checkServerStatus={checkServerStatus} onLogout={onLogout} />}
+        {activeTab === 'history' && <History checkServerStatus={checkServerStatus} />}
       </div>
     </div>
   );
