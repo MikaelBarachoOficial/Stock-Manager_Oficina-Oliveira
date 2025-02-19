@@ -2,6 +2,9 @@ import sqlite3
 import bcrypt
 from datetime import datetime
 
+# Cria uma conexão com o banco de dados (ajuste o caminho conforme necessário)
+connection = sqlite3.connect("database.db", check_same_thread=False)
+
 def get_db_connection():
     conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
@@ -42,18 +45,30 @@ def init_items():
                 name TEXT NOT NULL,
                 quantity INTEGER NOT NULL,
                 cost_value REAL NOT NULL,
-                sell_value REAL NOT NULL
+                sell_value REAL NOT NULL,
+                last_update TEXT NOT NULL,
+                date_created TEXT NOT NULL
             )
         ''')
     close_db_connection(conn)
+
+def add_item_entry(code, name, quantity, cost_value, sell_value):
+    # Get the current timestamp
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    query = '''
+        INSERT INTO items (code, name, quantity, cost_value, sell_value, last_update, date_created)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    '''
+    return execute_query(query, (code, name, quantity, cost_value, sell_value, timestamp, timestamp))
 
 def execute_query(query, params=()):
     conn = get_db_connection()
     cursor = conn.cursor()
     cursor.execute(query, params)
     conn.commit()
+    last_id = cursor.lastrowid
     close_db_connection(conn)
-    return cursor.lastrowid
+    return last_id
 
 def fetch_all(query, params=()):
     conn = get_db_connection()
@@ -96,7 +111,7 @@ def add_history_entry(item_id, item_code, quantity, cost_value, sell_value, acti
         INSERT INTO history (item_id, item_code, quantity, cost_value, sell_value, action_type, timestamp)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     '''
-    execute_query(query, (item_id, item_code, quantity, cost_value, sell_value, action_type, timestamp))
+    return execute_query(query, (item_id, item_code, quantity, cost_value, sell_value, action_type, timestamp))
 
 def init_db():
     init_login()

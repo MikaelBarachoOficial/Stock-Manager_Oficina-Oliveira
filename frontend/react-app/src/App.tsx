@@ -5,6 +5,8 @@ import MainPage from './components/MainPage/MainPage';
 import ServerLess from './components/ServerLess/ServerLess';
 import Loading from './components/Loading/Loading';
 
+const API_FLASK_SERVER_URL = "http://127.0.0.1:81/";
+
 function App() {
   // Check if the user is logged in by looking at the cookie
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(
@@ -20,7 +22,7 @@ function App() {
   const checkServerStatus = async (): Promise<void> => {
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/");
+      const response = await fetch(`${API_FLASK_SERVER_URL}/`);
 
       if (!response.ok) {
         throw new Error("Server not ready");
@@ -67,9 +69,9 @@ function App() {
   return (
     <>
       {isLoggedIn ? (
-        <MainPage onLogout={handleLogout} checkServerStatus={checkServerStatus}/>
+        <MainPage onLogout={handleLogout} checkServerStatus={checkServerStatus} API_FLASK_SERVER_URL={API_FLASK_SERVER_URL} />
       ) : (
-        <Login onLogin={() => setIsLoggedIn(true)} />
+        <Login onLogin={() => setIsLoggedIn(true)} API_FLASK_SERVER_URL={API_FLASK_SERVER_URL} />
       )}
     </>
   );

@@ -1,0 +1,5 @@
+By Mikael_Baracho_Development
+Oficina Oliveira - Stock Management
+Server already running! :D
+---------
+INFO:waitress:Serving on http://0.0.0.0:8000

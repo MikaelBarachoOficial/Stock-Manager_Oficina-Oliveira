@@ -9,9 +9,10 @@ import History from './History/History';
 interface MainPageProps {
   onLogout: () => void;
   checkServerStatus: () => Promise<void>;
+  API_FLASK_SERVER_URL: string;
 }
 
-const MainPage: React.FC<MainPageProps> = ({ onLogout, checkServerStatus }) => {
+const MainPage: React.FC<MainPageProps> = ({ onLogout, checkServerStatus, API_FLASK_SERVER_URL }) => {
     const [activeTab, setActiveTab] = useState<'stock' | 'options' | 'history'>('stock');
 
 
@@ -27,9 +28,9 @@ const MainPage: React.FC<MainPageProps> = ({ onLogout, checkServerStatus }) => {
         <Header checkServerStatus={checkServerStatus} onLogout={onLogout} onTabChange={handleTabChange} />
 
         {/* Conditionally render components based on activeTab */}
-        {activeTab === 'stock' && <Stock checkServerStatus={checkServerStatus} />}
-        {activeTab === 'options' && <Options checkServerStatus={checkServerStatus} onLogout={onLogout} />}
-        {activeTab === 'history' && <History checkServerStatus={checkServerStatus} />}
+        {activeTab === 'stock' && <Stock checkServerStatus={checkServerStatus} API_FLASK_SERVER_URL={API_FLASK_SERVER_URL} />}
+        {activeTab === 'options' && <Options checkServerStatus={checkServerStatus} onLogout={onLogout} API_FLASK_SERVER_URL={API_FLASK_SERVER_URL} />}
+        {activeTab === 'history' && <History checkServerStatus={checkServerStatus} API_FLASK_SERVER_URL={API_FLASK_SERVER_URL} />}
       </div>
     </div>
   );

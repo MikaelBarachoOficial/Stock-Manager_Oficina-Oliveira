@@ -20,6 +20,8 @@ const ServerLess: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // SERVER INSTALLER MUST BE IN PUBLIC FOLDER
+
   return (
     <div className="serverless-container">
       <h1>Server Unavailable</h1>
@@ -27,6 +29,9 @@ const ServerLess: React.FC = () => {
       <button onClick={() => window.location.reload()}>
         Retry Now
       </button>
+      <a href="/OficinaOliveira_Installer.exe" download>
+        Download Server
+      </a>
     </div>
   );
 };

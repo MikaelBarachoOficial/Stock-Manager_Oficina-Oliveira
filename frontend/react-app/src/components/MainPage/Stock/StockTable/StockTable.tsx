@@ -9,6 +9,7 @@ export interface Item {
     quantity: number;
     cost_value: number;
     sell_value: number;
+    last_update: string;
 }
 
 // Define the props for the StockTable component
@@ -18,13 +19,19 @@ interface StockTableProps {
 
 const StockTable: React.FC<StockTableProps> = ({ items }) => {
 
+    const sortedItems = [...items].sort((a, b) => {
+        return new Date(b.last_update).getTime() - new Date(a.last_update).getTime();
+    });
+
+
     return (
         <>
-            <div className="stock-hidden">
-                <p>Vire o celular para visualizar a planilha.</p>
-            </div>
 
-            <table className="stock-table">
+            {sortedItems.length > 0 ? <div className="stock-hidden">
+                <p>Vire o celular para visualizar a planilha.</p>
+            </div> : null}
+
+            {sortedItems.length > 0 ? <table className="stock-table">
                 <thead className="stock-table-header">
                     <tr>
                         <th>Código</th>
@@ -35,7 +42,7 @@ const StockTable: React.FC<StockTableProps> = ({ items }) => {
                     </tr>
                 </thead>
                 <tbody className="stock-table-body">
-                    {items.map((item) => (
+                    {sortedItems.map((item) => (
                         <tr key={item.id}>
                             <td>
                                 <input readOnly value={item.code} type="text" />
@@ -63,7 +70,7 @@ const StockTable: React.FC<StockTableProps> = ({ items }) => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </table> : <p className="no-items-p">Nenhum item adicionado.</p>}
         </>
     );
 };

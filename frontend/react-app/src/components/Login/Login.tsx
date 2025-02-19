@@ -4,9 +4,10 @@ import CookiesPopUp from './CookiesPopUp';
 
 interface LoginProps {
     onLogin: () => void; // Function to update login state in App.tsx
+    API_FLASK_SERVER_URL: string;
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
+const Login: React.FC<LoginProps> = ({ onLogin, API_FLASK_SERVER_URL }) => {
     const [password, setPassword] = useState<string>('');
     const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(JSON.parse(localStorage.getItem('keepLoggedIn_isChecked') || 'false'));
     const [wrongPassword, setWrongPassword] = useState<boolean>(false);
@@ -17,7 +18,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     const handleLogin = async () => {
 
         try {
-            const response = await fetch("http://127.0.0.1:5000/login", {
+            const response = await fetch(`${API_FLASK_SERVER_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

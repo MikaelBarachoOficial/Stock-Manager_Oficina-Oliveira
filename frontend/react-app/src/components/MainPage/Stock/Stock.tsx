@@ -5,6 +5,7 @@ import Loading from "../../Loading/Loading";
 
 type AddAndSellProps = {
   checkServerStatus: () => Promise<void>;
+  API_FLASK_SERVER_URL: string;
 };
 
 interface Item {
@@ -14,10 +15,11 @@ interface Item {
   quantity: number;
   cost_value: number;
   sell_value: number;
+  last_update: string;
 }
 
 
-const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
+const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus, API_FLASK_SERVER_URL }) => {
 
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,7 +29,7 @@ const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
     try {
       setLoading(true);
       await checkServerStatus();
-      const response = await fetch("http://127.0.0.1:5000/items");
+      const response = await fetch(`${API_FLASK_SERVER_URL}/items`);
       const data = await response.json();
   
       if (response.ok) {
@@ -41,7 +43,7 @@ const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
     } finally {
       setLoading(false);
     }
-  }, [checkServerStatus]);
+  }, [checkServerStatus, API_FLASK_SERVER_URL]);
 
   // Fetch items on component mount
   useEffect(() => {
@@ -50,15 +52,24 @@ const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
 
   // Function to handle selling an item ("Adicionar Venda")
   const onSellStock = async (): Promise<void> => {
-    const code = prompt("Digite o código do item para vender:");
-    const quantityStr = prompt("Digite a quantidade a ser vendida:");
-    if (!code || !quantityStr) {
-      alert("Código e quantidade são obrigatórios.");
+
+    let code = prompt("Digite o código do item para vender:");
+    if (!code) {
+      alert("Quantidade é obrigatório.");
       return;
     }
+    code = code.trim()
+
+    let quantityStr = prompt("Digite a quantidade a ser vendida:");
+    if (!quantityStr) {
+      alert("Código é obrigatório.");
+      return;
+    }
+    quantityStr = quantityStr.trim()
+
     const quantity = parseInt(quantityStr, 10);
     try {
-      const response = await fetch("http://127.0.0.1:5000/items/add_and_sell", {
+      const response = await fetch(`${API_FLASK_SERVER_URL}/items/add_and_sell`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "sell", code, quantity }),
@@ -78,15 +89,25 @@ const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
 
   // Function to handle adding stock ("Adicionar Estoque")
   const onAddStock = async (): Promise<void> => {
-    const code = prompt("Digite o código do item para adicionar estoque:");
-    const quantityStr = prompt("Digite a quantidade a ser adicionada:");
-    if (!code || !quantityStr) {
-      alert("Código e quantidade são obrigatórios.");
+
+    let code = prompt("Digite o código do item para adicionar estoque:");
+    if (!code) {
+      alert("Código é obrigatório.");
       return;
     }
+    code = code.trim()
+    console.log(code)
+
+    let quantityStr = prompt("Digite a quantidade a ser adicionada:");
+    if (!quantityStr) {
+      alert("Quantidade é obrigatório.");
+      return;
+    }
+    quantityStr = quantityStr.trim()
+
     const quantity = parseInt(quantityStr, 10);
     try {
-      const response = await fetch("http://127.0.0.1:5000/items/add_and_sell", {
+      const response = await fetch(`${API_FLASK_SERVER_URL}/items/add_and_sell`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "add_stock", code, quantity }),
@@ -129,7 +150,7 @@ const AddAndSell: React.FC<AddAndSellProps> = ({ checkServerStatus }) => {
 
       {/* Dashboard Content */}
       <div className="stock-content">
-        { !loading && items.length > 0 ? <StockTable items={items} /> : <Loading title={false} /> }
+        { loading ? <Loading title={false} /> : <StockTable items={items} />  }
       </div>
     </section>
   );
