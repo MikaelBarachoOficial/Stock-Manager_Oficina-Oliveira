@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './ServerLess.css';
 
-const ServerLess: React.FC = () => {
+interface ServerLessProps {
+  setAPI_FLASK_SERVER_URL: (url: string) => void;
+}
+
+const ServerLess: React.FC<ServerLessProps> = ({ setAPI_FLASK_SERVER_URL }) => {
   const waitTime = 15; // Seconds
 
   const [countdown, setCountdown] = useState(waitTime);
@@ -20,6 +24,11 @@ const ServerLess: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Function to change the API address
+  const changeIpAddress = (newAddress: string): void => {
+    setAPI_FLASK_SERVER_URL(`http://${newAddress}:81`);
+  };
+
   // SERVER INSTALLER MUST BE IN PUBLIC FOLDER
 
   return (
@@ -28,6 +37,16 @@ const ServerLess: React.FC = () => {
       <p>The server is currently offline. Retrying in {countdown} seconds...</p>
       <button onClick={() => window.location.reload()}>
         Retry Now
+      </button>
+      <button
+        onClick={() => {
+          const newAddress = prompt('Insira o novo IP Address:');
+          if (newAddress) {
+            changeIpAddress(newAddress);
+          }
+        }}
+      >
+        Change API Address
       </button>
       <a href="/OficinaOliveira_Installer.exe" download>
         Download Server
