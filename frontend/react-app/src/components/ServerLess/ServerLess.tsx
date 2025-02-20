@@ -26,7 +26,7 @@ const ServerLess: React.FC<ServerLessProps> = ({ setAPI_FLASK_SERVER_URL }) => {
 
   // Function to change the API address
   const changeIpAddress = (newAddress: string): void => {
-    setAPI_FLASK_SERVER_URL(`http://${newAddress}:81`);
+    setAPI_FLASK_SERVER_URL(`https://${newAddress}:81`);
   };
 
   // SERVER INSTALLER MUST BE IN PUBLIC FOLDER

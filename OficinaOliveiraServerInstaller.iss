@@ -5,6 +5,7 @@
 ; Basic information about the installer
 AppName=Oficina Oliveira Stock Manager
 AppVersion=1.0
+AppPublisher=Mikael Baracho Development
 DefaultDirName={pf}\OficinaOliveira
 DefaultGroupName=Oficina Oliveira
 OutputDir=.
@@ -17,6 +18,9 @@ MinVersion=6.1
 DisableDirPage=yes
 DisableProgramGroupPage=yes
 WizardStyle=classic
+PrivilegesRequired=admin
+
+
 
 
 [Messages]
@@ -26,7 +30,7 @@ WelcomeLabel2=Have fun, Sir! :D
 
 ; The Finish page
 FinishedHeadingLabel=Installation Complete
-FinishedLabel=Server has been installed! Have fun, Sir! :D
+FinishedLabel=Server has been installed! Your SSL Certificate must be valid for 1 year! Have fun, Sir! :D
 
 
 [Files]
@@ -36,6 +40,9 @@ Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\*"; DestDir
 Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\ServerInit.bat"; DestDir: "{app}"; Flags: ignoreversion
 ; Include assets folder
 Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\assets\*"; DestDir: "{app}\assets"; Flags: recursesubdirs createallsubdirs
+; Incluse openssl
+Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\openssl\*"; DestDir: "{app}\openssl"; Flags: recursesubdirs
+
 
 [Icons]
 ; Create a desktop shortcut to start the server
@@ -45,12 +52,25 @@ Name: "{commondesktop}\Oficina Oliveira - Start Server"; Filename: "{app}\Server
 ; Add a registry entry to run ServerInit.bat at startup for the current user.
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "OficinaOliveiraServer"; ValueData: """{app}\ServerInit.bat"""; Flags: uninsdeletevalue
 
+[Run]
+; Create the virtual environment
+Filename: "{cmd}"; Parameters: "/C python -m venv ""{app}\.venv"""; Flags: runhidden
+
+[Run]
+; Install required packages into the virtual environment
+Filename: "{app}\.venv\Scripts\python.exe"; Parameters: "-m pip install -r ""{app}\requirements.txt""";
+
+[Run]
+Filename: "{app}\openssl\openssl.exe"; Parameters: "req -x509 -newkey rsa:4096 -keyout ""{app}\key.pem"" -out ""{app}\cert.pem"" -days 365 -nodes -subj ""/CN=localhost"""; WorkingDir: "{app}"; Flags: waituntilterminated
+
+
 
 [Run]
 ; Optionally, run the ServerInit.bat immediately after installation (postinstall)
 Filename: "{app}\ServerInit.bat"; Description: "Start Server"; Flags: postinstall nowait
 
 [UninstallDelete]
-; Delete the files if you want them removed on uninstall (optional)
+; Remove installation folder
 Type: filesandordirs; Name: "{app}"
+
 

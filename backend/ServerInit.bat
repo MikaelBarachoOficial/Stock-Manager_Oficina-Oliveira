@@ -15,10 +15,34 @@ for /L %%i in (0,1,21) do (
 )
 echo.
 
+color 3
+
 :: Mensagem de inicialização
+echo ------------------------------------
 echo Starting server...
 timeout /t 2 >nul
 
+cls
+
+color 2
+
+echo MIKAEL BARACHO DEV
+echo ------------------------------------
+echo Oficina Oliveira - Stock Management
+echo By Mikael_Baracho_Development
+echo Server Ready to Run :D
+echo ------------------------------------
+echo Wait...
+
+timeout /t 5 >nul
+
+cls
+
+echo MIKAEL BARACHO DEV
+echo ------------------------------------
+echo Server Started!
+
+timeout /t 1 >nul
 :: Verifica se o caminho do projeto existe
 cd /d "C:\Program Files (x86)\OficinaOliveira\" || (
     echo ERROR: Path not found!
@@ -26,7 +50,12 @@ cd /d "C:\Program Files (x86)\OficinaOliveira\" || (
     exit /b
 )
 
-:: Ativa o ambiente virtual
+if not exist .venv\Scripts\activate (
+    echo ERROR: Virtual environment not found!
+    pause
+    exit /b
+)
+
 call .venv\Scripts\activate || (
     echo ERROR: Failed to activate virtual environment!
     pause
@@ -35,19 +64,9 @@ call .venv\Scripts\activate || (
 
 cd src
 
-:: Exibe uma mensagem antes de iniciar o servidor
-echo Server is starting, please wait...
+powershell -WindowStyle Hidden -Command "Start-Process hypercorn -ArgumentList 'app:app --bind 0.0.0.0:81 --certfile \"C:\Program Files (x86)\OficinaOliveira\cert.pem\" --keyfile \"C:\Program Files (x86)\OficinaOliveira\key.pem\"'"
 
-color 3
 
-:: Opcional: Exibe uma animação ASCII divertida
-if exist "C:\Windows\System32\curl.exe" (
-    start /b cmd /c curl -s ascii.live/rick
-    timeout /t 4 >nul
-    taskkill /f /im curl.exe >nul 2>&1
-) else (
-    echo (No ASCII animation, curl not found)
-)
 
-:: Inicia o servidor Flask com logs
-start "Oficina Oliveira - Stock Manager - Server" /min pythonw run.py
+
+

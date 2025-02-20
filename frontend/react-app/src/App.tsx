@@ -19,7 +19,7 @@ function App() {
   // Initialize API_FLASK_SERVER_URL from localStorage if available, or use default value
   const [API_FLASK_SERVER_URL, setAPI_FLASK_SERVER_URL] = useState<string>(() => {
     const storedUrl = localStorage.getItem(localStorageKey);
-    return storedUrl ? storedUrl : 'http://192.168.1.3:81';
+    return storedUrl ? storedUrl : 'https://192.168.1.3:81';
   });
 
   // Update localStorage whenever API_FLASK_SERVER_URL changes

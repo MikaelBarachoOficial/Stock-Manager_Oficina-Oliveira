@@ -2,6 +2,15 @@
 
 This backend is built using Flask and SQLite to manage a simple inventory system. It includes functionalities for user authentication, item management, and history tracking.
 
+When your ssl expire, paste this on the Server Folder:
+```sh
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+```
+or
+```sh
+& "C:\Program Files (x86)\OficinaOliveira\openssl\openssl.exe" req -x509 -newkey rsa:4096 -keyout "C:\Program Files (x86)\OficinaOliveira\key.pem" -out "C:\Program Files (x86)\OficinaOliveira\cert.pem" -days 365 -nodes -subj "/CN=localhost"
+```
+
 ## Setup
 
 1. **Clone the repository:**
