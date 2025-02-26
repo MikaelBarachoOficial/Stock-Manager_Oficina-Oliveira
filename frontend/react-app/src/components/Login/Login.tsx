@@ -32,7 +32,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, API_FLASK_SERVER_URL }) => {
                 if (keepLoggedIn) {
                     const date = new Date();
                     date.setDate(date.getDate() + 1);
-                    document.cookie = `${COOKIE_NAME}=true; expires=${date.toUTCString()}; path=/; Secure; SameSite=Strict`;
+                    document.cookie = `${COOKIE_NAME}=true; expires=${date.toUTCString()}; path=/; SameSite=Strict`;
                 }
             } else {
                 setWrongPassword(true);

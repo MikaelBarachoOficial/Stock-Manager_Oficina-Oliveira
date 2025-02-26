@@ -30,7 +30,7 @@ WelcomeLabel2=Have fun, Sir! :D
 
 ; The Finish page
 FinishedHeadingLabel=Installation Complete
-FinishedLabel=Server has been installed! Your SSL Certificate must be valid for 1 year! Have fun, Sir! :D
+FinishedLabel=Server has been installed! Have fun, Sir! :D
 
 
 [Files]
@@ -40,8 +40,9 @@ Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\*"; DestDir
 Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\ServerInit.bat"; DestDir: "{app}"; Flags: ignoreversion
 ; Include assets folder
 Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\assets\*"; DestDir: "{app}\assets"; Flags: recursesubdirs createallsubdirs
-; Incluse openssl
-Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\backend\openssl\*"; DestDir: "{app}\openssl"; Flags: recursesubdirs
+; Include frontend build (React app)
+Source: "C:\Users\Mikael\Desktop\dev\Oficina Oliveira Server\frontend\react-app\dist\*"; DestDir: "{app}\frontend\dist"; Flags: recursesubdirs createallsubdirs
+
 
 
 [Icons]
@@ -59,11 +60,6 @@ Filename: "{cmd}"; Parameters: "/C python -m venv ""{app}\.venv"""; Flags: runhi
 [Run]
 ; Install required packages into the virtual environment
 Filename: "{app}\.venv\Scripts\python.exe"; Parameters: "-m pip install -r ""{app}\requirements.txt""";
-
-[Run]
-Filename: "{app}\openssl\openssl.exe"; Parameters: "req -x509 -newkey rsa:4096 -keyout ""{app}\key.pem"" -out ""{app}\cert.pem"" -days 365 -nodes -subj ""/CN=localhost"""; WorkingDir: "{app}"; Flags: waituntilterminated
-
-
 
 [Run]
 ; Optionally, run the ServerInit.bat immediately after installation (postinstall)

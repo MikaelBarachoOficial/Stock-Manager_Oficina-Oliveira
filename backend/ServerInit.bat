@@ -64,8 +64,17 @@ call .venv\Scripts\activate || (
 
 cd src
 
-powershell -WindowStyle Hidden -Command "Start-Process hypercorn -ArgumentList 'app:app --bind 0.0.0.0:81 --certfile \"C:\Program Files (x86)\OficinaOliveira\cert.pem\" --keyfile \"C:\Program Files (x86)\OficinaOliveira\key.pem\"'"
+powershell -NoProfile -WindowStyle Hidden -Command "& { Start-Process 'hypercorn' -ArgumentList 'app:app --bind 0.0.0.0:81' -WindowStyle Hidden }"
 
+cd /d "C:\Program Files (x86)\OficinaOliveira\frontend\dist" || (
+    color 4
+    echo ERROR: Frontend path not found!
+    pause
+    exit /b
+)
+
+
+powershell -NoProfile -WindowStyle Hidden -Command "& { Start-Process 'cmd.exe' -ArgumentList '/c npx serve -s . -l 82' -WindowStyle Hidden }"
 
 
 

@@ -251,6 +251,6 @@ def change_password():
     return jsonify({"message": "Password changed successfully!"}), 200
 
 
-@app.route('/', methods=['GET'])
+@app.route('/checkstatus', methods=['GET'])
 def index():
     return jsonify({'message': 'Server is working!'}), 200

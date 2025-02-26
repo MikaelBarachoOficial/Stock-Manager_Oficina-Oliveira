@@ -18,8 +18,10 @@ function App() {
 
   // Initialize API_FLASK_SERVER_URL from localStorage if available, or use default value
   const [API_FLASK_SERVER_URL, setAPI_FLASK_SERVER_URL] = useState<string>(() => {
-    const storedUrl = localStorage.getItem(localStorageKey);
-    return storedUrl ? storedUrl : 'https://192.168.1.3:81';
+    const currentUrl = new URL(window.location.href);
+    const currentIp = currentUrl.hostname;
+
+    return currentIp
   });
 
   // Update localStorage whenever API_FLASK_SERVER_URL changes
@@ -32,7 +34,7 @@ function App() {
    // Memoize checkServerStatus so that it only changes when API_FLASK_SERVER_URL changes
    const checkServerStatus = useCallback(async (): Promise<void> => {
     try {
-      const response = await fetch(`${API_FLASK_SERVER_URL}/`);
+      const response = await fetch(`${API_FLASK_SERVER_URL}/checkstatus`);
       if (!response.ok) {
         throw new Error("Server not ready");
       }
