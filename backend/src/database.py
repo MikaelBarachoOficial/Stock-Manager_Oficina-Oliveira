@@ -1,12 +1,17 @@
 import sqlite3
 import bcrypt
+import os
 from datetime import datetime
 
-# Cria uma conexão com o banco de dados (ajuste o caminho conforme necessário)
-connection = sqlite3.connect("database.db", check_same_thread=False)
+# Define o caminho para o banco de dados dentro de AppData
+APPDATA_PATH = os.path.join(os.getenv("APPDATA"), "OficinaOliveiraServerDB")
+DB_PATH = os.path.join(APPDATA_PATH, "database.db")
+
+# Garante que o diretório existe
+os.makedirs(APPDATA_PATH, exist_ok=True)
 
 def get_db_connection():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -117,3 +122,4 @@ def init_db():
     init_login()
     init_items()
     init_history()
+
